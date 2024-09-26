@@ -5,11 +5,16 @@
 <nav>
   <ul>
     <li>
-      <button class="nav-button" aria-expanded="false">lists</button>
+      <button class="nav-button" aria-expanded="false"
+        >lists
+        <span class="nav-icon">
+          <img src="/icons/triangle.svg" alt="" />
+        </span>
+      </button>
       <ul class="nav-list">
-        <li><a href="#">1</a></li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
+        <li><a href="#"><span class="list-content">1</span></a></li>
+        <li><a href="#"><span class="list-content">2</span></a></li>
+        <li><a href="#"><span class="list-content">3</span></a></li>
       </ul>
     </li>
   </ul>
@@ -17,6 +22,8 @@
 
 <style>
   .nav-button {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     font-size: 1rem;
     background-color: #eee;
     color: #444;
@@ -36,7 +43,16 @@
     height: 0;
     & li {
       pointer-events: none;
+      overflow: hidden;
     }
+  }
+  .nav-icon {
+    width: 1rem;
+    justify-self: end;
+    transform: rotate(90deg);
+  }
+  .list-content {
+    display: inline-block;
   }
   ul {
     list-style: none;
@@ -51,6 +67,13 @@
     width: 100%;
     text-decoration: none;
     text-align: center;
+    padding: 0.5rem 0;
+    transition: background-color 0.2s;
+    @media (any-hover: hover) {
+      &:hover {
+        background-color: #ddd;
+      }
+    }
   }
 </style>
 
@@ -58,7 +81,8 @@
   import gsap from "gsap";
   const navButton = document.querySelector<HTMLButtonElement>(".nav-button");
   const navList = document.querySelector(".nav-list");
-
+  const navIcon = document.querySelector(".nav-icon");
+  const listContents = navList.querySelectorAll(".list-content");
   const listItems = navList.querySelectorAll("li");
   let totalHeight = 0;
   listItems.forEach((item) => {
@@ -75,13 +99,22 @@
     const tl = gsap.timeline();
     if (navButton.getAttribute("aria-expanded") === "false") {
       // Closing the accordion
-      tl.to(listItems, {
+      tl.to(navIcon, {
+        rotation: "90",
         duration: 0.2,
-        y: 10,
-        opacity: 0,
-        stagger: -0.05,
-        ease: "power2.in",
+        ease: "power2.out",
       })
+        .to(
+          listContents,
+          {
+            duration: 0.2,
+            y: 10,
+            opacity: 0,
+            stagger: -0.05,
+            ease: "power2.in",
+          },
+          "-=0.3"
+        )
         .to(
           navList,
           {
@@ -97,30 +130,36 @@
           },
           "-=0.1"
         )
-        .set(listItems, { y: 0, opacity: 1 });
+        .set(listContents, { y: 0, opacity: 1 });
     } else {
       // Opening the accordion
-      tl.to(navList, {
-        duration: 0.2,
-        opacity: 1,
-        height: totalHeight,
-        ease: "cubic-bezier(0.33, 1, 0.68, 1)",
-        onComplete: () => {
-          listItems.forEach((item) => {
-            item.style.pointerEvents = "auto";
-          });
-        },
-      }).from(
-        listItems,
-        {
-          duration: 0.3,
-          y: 10,
-          opacity: 0,
-          stagger: 0.05,
-          ease: "power2.out",
-        },
-        "-=0.1"
-      );
+      tl.to(navIcon, {
+        rotation: "180",
+        duration: 0.1,
+        ease: "power2.in",
+      })
+        .to(navList, {
+          duration: 0.2,
+          opacity: 1,
+          height: totalHeight,
+          ease: "cubic-bezier(0.33, 1, 0.68, 1)",
+          onComplete: () => {
+            listItems.forEach((item) => {
+              item.style.pointerEvents = "auto";
+            });
+          },
+        })
+        .from(
+          listContents,
+          {
+            duration: 0.3,
+            y: 10,
+            opacity: 0,
+            stagger: 0.05,
+            ease: "power2.out",
+          },
+          "-=0.1"
+        );
     }
   });
 </script>
