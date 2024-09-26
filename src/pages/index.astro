@@ -1,8 +1,20 @@
 ---
+import Accordion from "../components/Accordion.astro";
 import Layout from "../layouts/Layout.astro";
 import "../styles/global.css";
+
+const accordionItems = [
+  {
+    title: "セクション 1",
+    content: "ここにセクション1の内容が入ります。クリックして開閉できます。",
+  },
+  {
+    title: "セクション 2",
+    content: "ここにセクション2の内容が入ります。これも開閉可能です。",
+  },
+];
 ---
 
-<Layout title="test" description="test">
-  <p>first</p>
+<Layout title="components" description="components">
+  <Accordion items={accordionItems} />
 </Layout>

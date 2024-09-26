@@ -1,0 +1,147 @@
+---
+// interface Props {
+//   items: {
+//     title: string;
+//     content: string;
+//   }[];
+// }
+
+const { items } = Astro.props;
+---
+
+<div class="accordion">
+  {
+    items.map((item, index) => (
+      <details>
+        <summary>
+          {item.title}
+          <span class="icon">
+            <img src="/icons/triangle.svg" alt="" />
+          </span>
+        </summary>
+        <div class="content">
+          <div class="content-inner">{item.content}</div>
+        </div>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .accordion {
+    width: 20rem;
+    max-width: 100%;
+  }
+  details {
+    /* border: 1px solid #ccc; */
+    border-radius: 4px;
+    margin-bottom: 1em;
+    /* &[open] {
+      & summary {
+        border-bottom: 1px solid #ccc;
+      }
+      & .icon {
+        transform: rotate(0deg);
+      }
+    } */
+    & .icon {
+      transform: rotate(180deg);
+    }
+    &.is-opened .icon {
+      transform: rotate(0deg);
+    }
+  }
+  summary {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    font-weight: bold;
+    background-color: #ccc;
+    /* margin: -0.5em -0.5em 0; */
+    padding: 0.5em;
+    cursor: pointer;
+    &::-webkit-details-marker {
+      display: none;
+    }
+  }
+  .icon {
+    width: 1rem;
+    justify-self: end;
+    transition: transform 0.5s;
+  }
+  .content {
+    background-color: #ddd;
+    & .content-inner {
+      padding: 0.5em;
+    }
+  }
+</style>
+
+<script>
+  const details =
+    document.querySelectorAll<HTMLDetailsElement>(".accordion details");
+
+  details.forEach((detail) => {
+    const summary = detail.querySelector("summary");
+    const content = detail.querySelector(".content") as HTMLElement;
+
+    const RUNNING_VALUE = "running";
+    const IS_OPENED_CLASS = "is-opened";
+
+    summary.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      if (detail.dataset.animationStatus === RUNNING_VALUE) {
+        return;
+      }
+
+      if (detail.open) {
+        detail.classList.toggle(IS_OPENED_CLASS);
+        const closingAnimation = content.animate(
+          closingAnimationKeyframes(content),
+          timing
+        );
+        detail.dataset.animationStatus = RUNNING_VALUE;
+        closingAnimation.onfinish = () => {
+          detail.removeAttribute("open");
+          detail.dataset.animationStatus = "";
+        };
+      } else {
+        detail.setAttribute("open", "true");
+        detail.classList.toggle(IS_OPENED_CLASS);
+        const openingAnimation = content.animate(
+          openingAnimationKeyframes(content),
+          timing
+        );
+        detail.dataset.animationStatus = RUNNING_VALUE;
+        openingAnimation.onfinish = () => {
+          detail.dataset.animationStatus = "";
+        };
+      }
+    });
+  });
+
+  const timing = {
+    duration: 300,
+    easing: "cubic-bezier(0.25, 1, 0.5, 1)",
+  };
+  const closingAnimationKeyframes = (content) => [
+    {
+      height: content.offsetHeight + "px",
+      opacity: 1,
+    },
+    {
+      height: 0,
+      opacity: 0,
+    },
+  ];
+  const openingAnimationKeyframes = (content) => [
+    {
+      height: 0,
+      opacity: 0,
+    },
+    {
+      height: content.offsetHeight + "px",
+      opacity: 1,
+    },
+  ];
+</script>
