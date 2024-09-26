@@ -75,17 +75,29 @@
     const tl = gsap.timeline();
     if (navButton.getAttribute("aria-expanded") === "false") {
       // Closing the accordion
-      tl.to(navList, {
+      tl.to(listItems, {
         duration: 0.2,
+        y: 10,
         opacity: 0,
-        height: 0,
-        ease: "cubic-bezier(0.33, 1, 0.68, 1)",
-        onComplete: () => {
-          listItems.forEach((item) => {
-            item.style.pointerEvents = "none";
-          });
-        },
-      });
+        stagger: -0.05,
+        ease: "power2.in",
+      })
+        .to(
+          navList,
+          {
+            duration: 0.2,
+            opacity: 0,
+            height: 0,
+            ease: "cubic-bezier(0.33, 1, 0.68, 1)",
+            onComplete: () => {
+              listItems.forEach((item) => {
+                item.style.pointerEvents = "none";
+              });
+            },
+          },
+          "-=0.1"
+        )
+        .set(listItems, { y: 0, opacity: 1 });
     } else {
       // Opening the accordion
       tl.to(navList, {
@@ -98,7 +110,17 @@
             item.style.pointerEvents = "auto";
           });
         },
-      });
+      }).from(
+        listItems,
+        {
+          duration: 0.3,
+          y: 10,
+          opacity: 0,
+          stagger: 0.05,
+          ease: "power2.out",
+        },
+        "-=0.1"
+      );
     }
   });
 </script>
