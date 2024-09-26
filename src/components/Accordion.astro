@@ -5,8 +5,16 @@
 //     content: string;
 //   }[];
 // }
-
-const { items } = Astro.props;
+const items = [
+  {
+    title: "セクション 1",
+    content: "ここにセクション1の内容が入ります。クリックして開閉できます。",
+  },
+  {
+    title: "セクション 2",
+    content: "ここにセクション2の内容が入ります。これも開閉可能です。",
+  },
+];
 ---
 
 <div class="accordion">

@@ -1,0 +1,104 @@
+---
+
+---
+
+<nav>
+  <ul>
+    <li>
+      <button class="nav-button" aria-expanded="false">lists</button>
+      <ul class="nav-list">
+        <li><a href="#">1</a></li>
+        <li><a href="#">2</a></li>
+        <li><a href="#">3</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+<style>
+  .nav-button {
+    font-size: 1rem;
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 0.5rem;
+    width: 100%;
+    text-align: left;
+    border: none;
+    outline: none;
+  }
+  .nav-list {
+    /* display: none;
+    &.active {
+      display: block;
+    } */
+    opacity: 0;
+    height: 0;
+    & li {
+      pointer-events: none;
+    }
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    background-color: #ccc;
+  }
+  a {
+    display: inline-block;
+    width: 100%;
+    text-decoration: none;
+    text-align: center;
+  }
+</style>
+
+<script>
+  import gsap from "gsap";
+  const navButton = document.querySelector<HTMLButtonElement>(".nav-button");
+  const navList = document.querySelector(".nav-list");
+
+  const listItems = navList.querySelectorAll("li");
+  let totalHeight = 0;
+  listItems.forEach((item) => {
+    totalHeight += item.offsetHeight;
+  });
+
+  navButton.addEventListener("click", () => {
+    const expanded =
+      navButton.getAttribute("aria-expanded") === "true" || false;
+    navButton.setAttribute("aria-expanded", (!expanded).toString());
+
+    // navList.classList.toggle("active");
+
+    const tl = gsap.timeline();
+    if (navButton.getAttribute("aria-expanded") === "false") {
+      // Closing the accordion
+      tl.to(navList, {
+        duration: 0.2,
+        opacity: 0,
+        height: 0,
+        ease: "cubic-bezier(0.33, 1, 0.68, 1)",
+        onComplete: () => {
+          listItems.forEach((item) => {
+            item.style.pointerEvents = "none";
+          });
+        },
+      });
+    } else {
+      // Opening the accordion
+      tl.to(navList, {
+        duration: 0.2,
+        opacity: 1,
+        height: totalHeight,
+        ease: "cubic-bezier(0.33, 1, 0.68, 1)",
+        onComplete: () => {
+          listItems.forEach((item) => {
+            item.style.pointerEvents = "auto";
+          });
+        },
+      });
+    }
+  });
+</script>

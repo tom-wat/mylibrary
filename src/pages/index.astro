@@ -1,20 +1,13 @@
 ---
 import Accordion from "../components/Accordion.astro";
+import AccordionNav from "../components/AccordionNav.astro";
+import GsapAnimation from "../components/GsapAnimation.astro";
 import Layout from "../layouts/Layout.astro";
 import "../styles/global.css";
-
-const accordionItems = [
-  {
-    title: "セクション 1",
-    content: "ここにセクション1の内容が入ります。クリックして開閉できます。",
-  },
-  {
-    title: "セクション 2",
-    content: "ここにセクション2の内容が入ります。これも開閉可能です。",
-  },
-];
 ---
 
 <Layout title="components" description="components">
-  <Accordion items={accordionItems} />
+  <Accordion />
+  <AccordionNav />
+  <GsapAnimation />
 </Layout>
