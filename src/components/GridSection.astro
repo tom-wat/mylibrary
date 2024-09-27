@@ -1,0 +1,106 @@
+---
+
+---
+
+<div class="wrapper">
+  <div class="text-wrapper">
+    <p class="title">title</p>
+    <p class="p1">paragraph1</p>
+    <p class="p2">paragraph2</p>
+    <p class="p3">paragraph3</p>
+  </div>
+  <div class="picture-wrapper">
+    <p class="img1"></p>
+    <p class="img2"></p>
+    <p class="img3"></p>
+  </div>
+</div>
+
+<style>
+  .wrapper {
+    width: 70vw;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background-color: #eee;
+  }
+  .text-wrapper {
+    background-color: #ccc;
+  }
+  .picture-wrapper {
+    background-color: #ddd;
+    display: grid;
+    place-content: center;
+  }
+  .p1 {
+    background-color: #eee;
+    @media (any-hover: hover) {
+      &:hover {
+        background-color: aqua;
+      }
+    }
+  }
+  .p2 {
+    background-color: #eee;
+    @media (any-hover: hover) {
+      &:hover {
+        background-color: green;
+      }
+    }
+  }
+  .p3 {
+    background-color: #eee;
+    @media (any-hover: hover) {
+      &:hover {
+        background-color: greenyellow;
+      }
+    }
+  }
+  .img1 {
+    width: 300px;
+    height: 300px;
+    background-color: aqua;
+    grid-column: 1/2;
+    grid-row: 1/2;
+  }
+  .img2 {
+    width: 300px;
+    height: 300px;
+    background-color: green;
+    grid-column: 1/2;
+    grid-row: 1/2;
+    opacity: 0;
+  }
+  .img3 {
+    width: 300px;
+    height: 300px;
+    background-color: greenyellow;
+    grid-column: 1/2;
+    grid-row: 1/2;
+    opacity: 0;
+  }
+</style>
+
+<script>
+  const paragraphs = document.querySelectorAll(
+    ".p1, .p2, .p3"
+  ) as NodeListOf<HTMLElement>;
+  const images = document.querySelectorAll(
+    ".img1, .img2, .img3"
+  ) as NodeListOf<HTMLElement>;
+
+  function activateParagraph(index) {
+    paragraphs.forEach((p, i) => {
+      p.classList.remove("active");
+      images[i].style.opacity = "0";
+    });
+
+    paragraphs[index].classList.add("active");
+    images[index].style.opacity = "1";
+  }
+
+  paragraphs.forEach((paragraph, index) => {
+    paragraph.addEventListener("mouseenter", () => {
+      activateParagraph(index);
+    });
+  });
+</script>
