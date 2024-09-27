@@ -1,0 +1,77 @@
+---
+const { speed = "20s" } = Astro.props;
+---
+
+<div class="wrapper">
+  <div class="grid-container">
+    <p class="img1">image1</p>
+    <p class="img2">image2</p>
+    <p class="img3">image3</p>
+    <p class="img4">image4</p>
+    <p class="img5">image5</p>
+    <p class="img6">image6</p>
+    <p class="img7">image7</p>
+    <p class="img8">image8</p>
+  </div>
+  <div class="grid-container">
+    <p class="img1">image1</p>
+    <p class="img2">image2</p>
+    <p class="img3">image3</p>
+    <p class="img4">image4</p>
+    <p class="img5">image5</p>
+    <p class="img6">image6</p>
+    <p class="img7">image7</p>
+    <p class="img8">image8</p>
+  </div>
+</div>
+
+<style define:vars={{ speed }}>
+  .wrapper {
+    width: 100vw;
+    /* min-height: 500px; */
+    overflow: hidden;
+    display: flex;
+    white-space: nowrap;
+    background-color: antiquewhite;
+  }
+  .grid-container {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    animation: move var(--speed) linear infinite;
+    text-align: center;
+    /* & > * {
+      background-color: white;
+    } */
+  }
+  .img1 {
+    width: 300px;
+    height: 200px;
+    margin-top: 3rem;
+    border-radius: 1rem;
+    background-color: white;
+  }
+  .img2 {
+    width: 200px;
+    height: 400px;
+    margin-bottom: 3rem;
+    margin-left: 3rem;
+    border-radius: 1rem;
+    background-color: white;
+  }
+  .img3 {
+    width: 300px;
+    height: 200px;
+    margin-top: 10rem;
+    margin-left: 2rem;
+    border-radius: 1rem;
+    background-color: white;
+  }
+  @keyframes move {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+</style>

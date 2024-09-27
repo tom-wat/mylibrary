@@ -1,0 +1,36 @@
+---
+const { text = "MovingText", speed = "10s" } = Astro.props;
+---
+
+<div class="text-container">
+  <p class="moving-text">{text}</p>
+  <p class="moving-text">{text}</p>
+  <p class="moving-text">{text}</p>
+</div>
+
+<style define:vars={{ speed }}>
+  .text-container {
+    display: flex;
+    width: 100vw;
+    overflow: hidden;
+    white-space: nowrap;
+    background-color: antiquewhite;
+  }
+
+  .moving-text {
+    display: inline-block;
+    animation: move var(--speed) linear infinite;
+    font-size: 10rem;
+    font-weight: bold;
+    color: white;
+  }
+
+  @keyframes move {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+</style>
