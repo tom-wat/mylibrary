@@ -45,8 +45,19 @@
   //   mouseStalker.style.display = "none";
   // });
 
-  targetElement.addEventListener("mouseenter", () => {
-    mouseStalker.style.transform = "scale(1)";
+  targetElement.addEventListener("mouseenter", (e: MouseEvent) => {
+    const stalkerWidth = mouseStalker.offsetWidth;
+    const stalkerHeight = mouseStalker.offsetHeight;
+    const x = e.clientX - stalkerWidth / 2;
+    const y = e.clientY - stalkerHeight / 2;
+
+    mouseStalker.style.left = `${x}px`;
+    mouseStalker.style.top = `${y}px`;
+
+    // mouseStalker.style.transform = "scale(1)";
+    setTimeout(() => {
+      mouseStalker.style.transform = "scale(1)";
+    }, 70);
   });
 
   targetElement.addEventListener("mouseleave", () => {
