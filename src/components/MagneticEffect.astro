@@ -1,0 +1,140 @@
+---
+
+---
+
+<div class="target-magnetic-element">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="48"
+    height="48"
+    viewBox="0 0 48 48"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="4"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    class="icon"
+  >
+    <circle cx="24" cy="24" r="20"></circle>
+    <line x1="24" y1="32" x2="24" y2="24"></line>
+    <line x1="24" y1="16" x2="24" y2="16"></line>
+  </svg>
+</div>
+<style>
+  .target-magnetic-element {
+    width: 200px;
+    height: 200px;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 50px auto;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .icon {
+    position: absolute;
+    transition: transform 0.3s cubic-bezier(0.5, 1, 0.89, 1);
+  }
+</style>
+
+<script>
+  const targetMagneticElement = document.querySelector(
+    ".target-magnetic-element"
+  );
+  const icon = document.querySelector(".icon") as SVGElement;
+
+  targetMagneticElement.addEventListener("mousemove", (e: MouseEvent) => {
+    const rect = targetMagneticElement.getBoundingClientRect();
+    const iconX = e.clientX - rect.left - rect.width / 2;
+    const iconY = e.clientY - rect.top - rect.height / 2;
+    const maxDistance = 35;
+
+    const distance = Math.sqrt(iconX * iconX + iconY * iconY);
+    const factor = Math.min(distance / 100, 1);
+
+    const moveX = (iconX / distance) * maxDistance * factor;
+    const moveY = (iconY / distance) * maxDistance * factor;
+
+    icon.style.transform = `translate(${moveX}px, ${moveY}px)`;
+  });
+
+  targetMagneticElement.addEventListener("mouseleave", (e: MouseEvent) => {
+    icon.style.transform = `translate(0px, 0px)`;
+  });
+</script>
+
+<!-- <script>
+  const targetMagneticElement = document.querySelector(
+    ".target-magnetic-element"
+  );
+  const icon = document.querySelector(".icon") as SVGElement;
+
+  let mouseX = 0,
+    mouseY = 0;
+  let iconX = 0,
+    iconY = 0;
+  let velocityX = 0,
+    velocityY = 0;
+
+  const springStrength = 0.1;
+  const friction = 0.7;
+  let isMouseOver = false;
+  let returnToCenter = false;
+
+  function updateIconPosition() {
+    if (isMouseOver) {
+      const dx = mouseX - iconX;
+      const dy = mouseY - iconY;
+
+      const ax = dx * springStrength;
+      const ay = dy * springStrength;
+
+      velocityX += ax;
+      velocityY += ay;
+
+      velocityX *= friction;
+      velocityY *= friction;
+
+      iconX += velocityX;
+      iconY += velocityY;
+    } else if (returnToCenter) {
+      iconX *= 0.85;
+      iconY *= 0.85;
+      velocityX = 0;
+      velocityY = 0;
+
+      if (Math.abs(iconX) < 0.5 && Math.abs(iconY) < 0.5) {
+        iconX = 0;
+        iconY = 0;
+        returnToCenter = false;
+      }
+    }
+
+    icon.style.transform = `translate(${iconX}px, ${iconY}px)`;
+
+    requestAnimationFrame(updateIconPosition);
+  }
+
+  targetMagneticElement.addEventListener("mouseenter", (e: MouseEvent) => {
+    isMouseOver = true;
+    returnToCenter = false;
+    const rect = targetMagneticElement.getBoundingClientRect();
+    mouseX = e.clientX - rect.left - rect.width / 2;
+    mouseY = e.clientY - rect.top - rect.height / 2;
+  });
+
+  targetMagneticElement.addEventListener("mouseleave", () => {
+    isMouseOver = false;
+    returnToCenter = true;
+  });
+
+  targetMagneticElement.addEventListener("mousemove", (e: MouseEvent) => {
+    const rect = targetMagneticElement.getBoundingClientRect();
+    mouseX = e.clientX - rect.left - rect.width / 2;
+    mouseY = e.clientY - rect.top - rect.height / 2;
+  });
+
+  updateIconPosition();
+</script> -->
