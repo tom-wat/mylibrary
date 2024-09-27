@@ -1,0 +1,57 @@
+---
+
+---
+
+<div class="target-element">要素の上にマウスを置いてください</div>
+
+<div class="mouse-stalker"></div>
+
+<style>
+  .target-element {
+    width: 200px;
+    height: 200px;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 50px auto;
+    cursor: pointer;
+  }
+
+  .mouse-stalker {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    pointer-events: none;
+    display: none;
+    transition:
+      top 0.1s ease,
+      left 0.1s ease;
+  }
+</style>
+
+<script>
+  const targetElement = document.querySelector(".target-element");
+  const mouseStalker = document.querySelector(".mouse-stalker") as HTMLElement;
+
+  targetElement.addEventListener("mouseenter", () => {
+    mouseStalker.style.display = "block";
+  });
+
+  targetElement.addEventListener("mouseleave", () => {
+    mouseStalker.style.display = "none";
+  });
+
+  targetElement.addEventListener("mousemove", (e: MouseEvent) => {
+    // マウスストーカーの中心がマウスカーソルの位置に来るように調整
+    const stalkerWidth = mouseStalker.offsetWidth;
+    const stalkerHeight = mouseStalker.offsetHeight;
+    const x = e.clientX - stalkerWidth / 2;
+    const y = e.clientY - stalkerHeight / 2;
+
+    mouseStalker.style.left = `${x}px`;
+    mouseStalker.style.top = `${y}px`;
+  });
+</script>
