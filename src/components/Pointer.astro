@@ -19,16 +19,17 @@
   }
 
   .mouse-stalker {
-    width: 20px;
-    height: 20px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background-color: rgba(0, 0, 0, 0.5);
     position: fixed;
     pointer-events: none;
-    display: none;
+    transform: scale(0);
     transition:
       top 0.1s ease,
-      left 0.1s ease;
+      left 0.1s ease,
+      transform 0.2s ease;
   }
 </style>
 
@@ -36,12 +37,20 @@
   const targetElement = document.querySelector(".target-element");
   const mouseStalker = document.querySelector(".mouse-stalker") as HTMLElement;
 
+  // targetElement.addEventListener("mouseenter", () => {
+  //   mouseStalker.style.display = "block";
+  // });
+
+  // targetElement.addEventListener("mouseleave", () => {
+  //   mouseStalker.style.display = "none";
+  // });
+
   targetElement.addEventListener("mouseenter", () => {
-    mouseStalker.style.display = "block";
+    mouseStalker.style.transform = "scale(1)";
   });
 
   targetElement.addEventListener("mouseleave", () => {
-    mouseStalker.style.display = "none";
+    mouseStalker.style.transform = "scale(0)";
   });
 
   targetElement.addEventListener("mousemove", (e: MouseEvent) => {
