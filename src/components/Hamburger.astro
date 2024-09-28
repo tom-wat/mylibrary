@@ -1,0 +1,114 @@
+---
+
+---
+
+<button
+  id="menu-button"
+  class="menu-button"
+  aria-expanded="false"
+  aria-controls="menu"
+>
+  <span class="hamburger" aria-label="メニューボタン">
+    <span class="line line-top"></span>
+    <span class="line line-middle"></span>
+    <span class="line line-bottom"></span>
+  </span>
+</button>
+<nav id="menu" class="menu"></nav>
+
+<style>
+  .menu-button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: #eee;
+    width: 64px;
+    height: 64px;
+    border-radius: 1rem;
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+  }
+  .hamburger {
+    width: 32px;
+    height: 32px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .line {
+    display: block;
+    background: black;
+    width: 100%;
+    height: 4px;
+    border-radius: 1rem;
+  }
+  .menu {
+    visibility: hidden;
+  }
+</style>
+<script>
+  import gsap from "gsap";
+  const menuButton = document.getElementById("menu-button");
+  const menu = document.getElementById("menu");
+  const tl = gsap.timeline({ paused: true, reversed: true });
+
+  tl.to(
+    ".hamburger span:nth-child(1)",
+    {
+      duration: 0.1,
+      // rotation: 45,
+      y: 14,
+      ease: "power3.out",
+    },
+    0
+  );
+  tl.to(
+    ".hamburger span:nth-child(2)",
+    {
+      duration: 0.1,
+      opacity: 0,
+      ease: "power3.out",
+    },
+    0
+  );
+  tl.to(
+    ".hamburger span:nth-child(3)",
+    {
+      duration: 0.1,
+      // rotation: -45,
+      y: -14,
+      ease: "power3.out",
+    },
+    0
+  );
+  tl.to(
+    ".hamburger span:nth-child(1)",
+    {
+      duration: 0.2,
+      rotation: 45,
+      // y: 14,
+      ease: "power3.out",
+    },
+    "+=0.1"
+  );
+  tl.to(
+    ".hamburger span:nth-child(3)",
+    {
+      duration: 0.2,
+      rotation: -45,
+      // y: -14,
+      ease: "power3.out",
+    },
+    "<"
+  );
+
+  menuButton.addEventListener("click", () => {
+    tl.reversed() ? tl.play() : tl.reverse();
+    const expanded = menuButton.getAttribute("aria-expanded") === "true";
+    menuButton.setAttribute("aria-expanded", String(!expanded));
+    menu.classList.toggle("open");
+  });
+</script>

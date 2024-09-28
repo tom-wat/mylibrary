@@ -76,7 +76,7 @@
     padding: 1rem;
     box-sizing: border-box;
     position: absolute;
-    top: 34px;
+    top: 100%;
     left: 0;
     &.open {
       display: flex;
@@ -86,12 +86,13 @@
     }
     &::after {
       content: "";
-      width: 100vw;
+      width: 100%;
       height: 300px;
-      position: fixed;
+      position: absolute;
       left: 0;
-      top: 42px;
-      background-color: #aaa;
+      top: 0;
+      border-image: linear-gradient(#aaa 0 0) fill 0 / /0 100lvi;
+      /* background-color: #aaa; */
       z-index: -1;
     }
   }
