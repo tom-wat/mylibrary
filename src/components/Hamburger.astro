@@ -16,11 +16,9 @@
 </button>
 <nav id="menu" class="menu">
   <ul class="list">
-    <li>1</li>
-    <li>2</li>
-    <li>3</li>
-    <li>4</li>
-    <li>5</li>
+    <li><span class="list-item">1</span></li>
+    <li><span class="list-item">2</span></li>
+    <li><span class="list-item">3</span></li>
   </ul>
 </nav>
 
@@ -66,6 +64,26 @@
   }
   .list {
     list-style: none;
+    & li {
+      --border-width: 100px;
+      background-color: #fff;
+      margin-bottom: 1rem;
+      position: relative;
+      overflow: hidden;
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 5%%;
+        width: var(--border-width);
+        height: 1px;
+        background-color: black;
+        box-sizing: border-box;
+      }
+    }
+  }
+  .list-item {
+    display: inline-block;
   }
 </style>
 <script>
@@ -73,6 +91,15 @@
   const menuButton = document.getElementById("menu-button");
   const menu = document.getElementById("menu");
   const tl = gsap.timeline({ paused: true, reversed: true });
+  const tl2 = gsap.timeline({
+    repeat: -1,
+    yoyo: true,
+    repeatDelay: 0.2,
+  });
+  const tl3 = gsap.timeline({
+    repeat: -1,
+    repeatDelay: 0,
+  });
 
   tl.to(
     ".hamburger span:nth-child(1)",
@@ -80,7 +107,7 @@
       duration: 0.1,
       // rotation: 45,
       y: 14,
-      ease: "power3.out",
+      ease: "ease-out",
     },
     0
   );
@@ -89,7 +116,7 @@
     {
       duration: 0.1,
       opacity: 0,
-      ease: "power3.out",
+      ease: "ease-out",
     },
     0
   );
@@ -99,7 +126,7 @@
       duration: 0.1,
       // rotation: -45,
       y: -14,
-      ease: "power3.out",
+      ease: "ease-out",
     },
     0
   );
@@ -109,7 +136,7 @@
       duration: 0.2,
       rotation: 45,
       // y: 14,
-      ease: "power3.out",
+      ease: "ease-out",
     },
     "+=0.1"
   );
@@ -119,10 +146,51 @@
       duration: 0.2,
       rotation: -45,
       // y: -14,
-      ease: "power3.out",
+      ease: "ease-out",
     },
     "<"
   );
+
+  tl2.from("li", {
+    "--border-width": "0px",
+    duration: 1,
+    ease: "power2.inOut",
+    stagger: 0.1,
+  });
+  tl3
+    .from(
+      ".list-item",
+      {
+        y: "100%",
+        duration: 1,
+        ease: "power2.inOut",
+        stagger: 0.1,
+      },
+      0
+    )
+    .to(
+      ".list-item",
+      {
+        y: "0%",
+        duration: 1,
+        ease: "power2.inOut",
+        stagger: 0.1,
+      },
+      1
+    )
+    .to(
+      ".list-item",
+      {
+        y: "-100%",
+        duration: 1,
+        ease: "power2.inOut",
+        stagger: 0.1,
+      },
+      1
+    )
+    .set(".list-item", {
+      y: "100%",
+    });
 
   menuButton.addEventListener("click", () => {
     tl.reversed() ? tl.play() : tl.reverse();
