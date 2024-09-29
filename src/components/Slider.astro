@@ -1,3 +1,229 @@
 ---
 
 ---
+
+<div class="wrapper">
+  <ul class="list">
+    <li class="item"></li>
+    <li class="item"></li>
+    <li class="item"></li>
+    <li class="item"></li>
+    <li class="item"></li>
+  </ul>
+  <div class="slider-wrapper">
+    <ul class="slider-list">
+      <li class="slider-item" data-active>1</li>
+      <li class="slider-item green">2</li>
+      <li class="slider-item blue">3</li>
+    </ul>
+  </div>
+</div>
+
+<style>
+  .list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    & > * {
+      margin-bottom: 1rem;
+    }
+  }
+  .item {
+    width: 100px;
+    height: 30px;
+    background-color: black;
+    transition: background-color 1s ease-in-out;
+  }
+  .item[data-active="true"] {
+    background-color: #eee;
+  }
+  .slider-list {
+    margin: 0;
+    padding: 0;
+    position: relative;
+    list-style: none;
+    & > * {
+      margin-bottom: 1rem;
+    }
+  }
+  .slider-item {
+    opacity: 0;
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background-color: blanchedalmond;
+    &.green {
+      background-color: green;
+    }
+    &.blue {
+      background-color: blue;
+    }
+  }
+  .slider-item[data-active] {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  import gsap from "gsap";
+  const list = document.querySelector(".list");
+  const items = document.querySelectorAll(".item");
+  const tl = gsap.timeline({ repeat: -1 });
+
+  // tl.to(".item", {
+  //   backgroundColor: "#eee",
+  //   duration: 2,
+  //   ease: "power2.inOut",
+  //   stagger: 3,
+  // }).to({}, { duration: 2 });
+
+  // items.forEach((item, index) => {
+  //   // 色を変更
+  //   tl.fromTo(
+  //     item,
+  //     { backgroundColor: "#000" }, // 開始状態
+  //     {
+  //       backgroundColor: "#eee",
+  //       duration: 2,
+  //       ease: "power2.inOut",
+  //     }
+  //   );
+  //   // 元の色に戻す
+  //   tl.to(item, {
+  //     backgroundColor: "#000",
+  //     duration: 2,
+  //     ease: "power2.inOut",
+  //   });
+  //   // 最後の要素以外の場合、次の要素のアニメーション開始前に少し待機
+  //   if (index < items.length - 1) {
+  //     tl.to({}, { duration: 0.5 }); // 0.5秒の待機時間
+  //   }
+  // });
+  // // タイムラインを再生
+  // tl.play();
+
+  // tl.to(".item", {
+  //   backgroundColor: "#eee",
+  //   duration: 2,
+  //   ease: "power2.inOut",
+  //   stagger: {
+  //     each: 3,
+  //     onComplete: function () {
+  //       // 各要素のアニメーション完了時に元の色に戻す
+  //       gsap.to(this.targets()[0], {
+  //         backgroundColor: "#000",
+  //         duration: 2,
+  //         ease: "power2.inOut",
+  //       });
+  //     },
+  //   },
+  // }).to({}, { duration: 1 });
+
+  // let currentAnimation = null;
+  // let nextAnimationQueue = null;
+
+  // // アニメーション関数
+  // function animateElement(element, index) {
+  //   if (currentAnimation && currentAnimation.isActive()) {
+  //     // 現在のアニメーションが実行中の場合、次のアニメーションをキューに入れる
+  //     nextAnimationQueue = { element, index };
+  //     return;
+  //   }
+
+  //   const tl = gsap.timeline({
+  //     onComplete: () => {
+  //       if (nextAnimationQueue) {
+  //         // キューにアニメーションがある場合、それを実行
+  //         const { element: nextElement, index: nextIndex } = nextAnimationQueue;
+  //         nextAnimationQueue = null;
+  //         animateElement(nextElement, nextIndex);
+  //       } else {
+  //         // キューにアニメーションがない場合、次の要素に進む
+  //         const nextIndex = (index + 1) % items.length;
+  //         animateElement(items[nextIndex], nextIndex);
+  //       }
+  //     },
+  //   });
+
+  //   tl.to(element, {
+  //     backgroundColor: "#eee",
+  //     duration: 1,
+  //     ease: "power2.inOut",
+  //   }).to(element, {
+  //     backgroundColor: "#000",
+  //     duration: 1,
+  //     ease: "power2.inOut",
+  //   });
+
+  //   currentAnimation = tl;
+  // }
+
+  // // 各要素にクリックイベントリスナーを追加
+  // items.forEach((item, index) => {
+  //   item.addEventListener("click", () => {
+  //     if (currentAnimation && currentAnimation.isActive()) {
+  //       // アニメーション中のクリックは次のアニメーションとしてキューに入れる
+  //       nextAnimationQueue = { element: item, index };
+  //     } else {
+  //       // アニメーションが実行中でない場合は直接開始
+  //       animateElement(item, index);
+  //     }
+  //   });
+  // });
+
+  // // オプション: アニメーションを停止する関数
+  // function stopAnimation() {
+  //   if (currentAnimation) {
+  //     currentAnimation.kill();
+  //     currentAnimation = null;
+  //   }
+  //   nextAnimationQueue = null;
+  //   // 全ての要素の背景色をリセット
+  //   gsap.to(items, { backgroundColor: "initial", duration: 0.5 });
+  // }
+
+  let currentIndex = -1;
+  let isAnimating = false;
+  let animationTimeout = null;
+
+  function animateNext() {
+    if (!isAnimating) return;
+
+    // 現在のアイテムの data-active を false に設定
+    if (currentIndex >= 0) {
+      items[currentIndex].setAttribute("data-active", "false");
+    }
+
+    // 次のインデックスを計算（循環）
+    currentIndex = (currentIndex + 1) % items.length;
+
+    // 次のアイテムの data-active を true に設定
+    items[currentIndex].setAttribute("data-active", "true");
+
+    // 2秒後に次のアニメーションを実行
+    animationTimeout = setTimeout(animateNext, 2000);
+  }
+
+  function startAnimation(startIndex) {
+    stopAnimation(); // 既存のアニメーションを確実に停止
+    currentIndex = startIndex - 1; // animateNext で +1 されるため
+    isAnimating = true;
+    animateNext();
+  }
+
+  function stopAnimation() {
+    isAnimating = false;
+    if (animationTimeout) {
+      clearTimeout(animationTimeout);
+      animationTimeout = null;
+    }
+    items.forEach((item) => item.setAttribute("data-active", "false"));
+  }
+
+  // 各要素にクリックイベントリスナーを追加
+  items.forEach((item, index) => {
+    item.addEventListener("click", () => {
+      startAnimation(index);
+    });
+  });
+</script>
