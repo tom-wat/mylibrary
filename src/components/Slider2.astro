@@ -1,0 +1,246 @@
+---
+
+---
+
+<div class="slider-wrapper">
+  <ul class="list">
+    <li class="item">
+      <svg viewBox="0 0 100 100">
+        <circle class="back" cx="50" cy="50" r="40"></circle>
+        <circle class="front" cx="50" cy="50" r="40"></circle>
+      </svg>
+    </li>
+    <li class="item">
+      <svg viewBox="0 0 100 100">
+        <circle class="back" cx="50" cy="50" r="40"></circle>
+        <circle class="front" cx="50" cy="50" r="40"></circle>
+      </svg>
+    </li>
+    <li class="item">
+      <svg viewBox="0 0 100 100">
+        <circle class="back" cx="50" cy="50" r="40"></circle>
+        <circle class="front" cx="50" cy="50" r="40"></circle>
+      </svg>
+    </li>
+    <li class="item">
+      <svg viewBox="0 0 100 100">
+        <circle class="back" cx="50" cy="50" r="40"></circle>
+        <circle class="front" cx="50" cy="50" r="40"></circle>
+      </svg>
+    </li>
+    <li class="item">
+      <svg viewBox="0 0 100 100">
+        <circle class="back" cx="50" cy="50" r="40"></circle>
+        <circle class="front" cx="50" cy="50" r="40"></circle>
+      </svg>
+    </li>
+  </ul>
+  <ul class="image-list">
+    <li class="image-item">1</li>
+    <li class="image-item">2</li>
+    <li class="image-item">3</li>
+    <li class="image-item">4</li>
+    <li class="image-item">5</li>
+  </ul>
+  <div class="arrow-wrapper">
+    <button id="arrow-left" class="arrow-left">left</button>
+    <button id="arrow-right" class="arrow-right">right</button>
+  </div>
+</div>
+<style>
+  .list {
+    display: flex;
+    /* flex-direction: column; */
+    list-style: none;
+    padding: 0;
+    width: 200px;
+  }
+  .item {
+    width: 100%;
+    height: auto;
+    margin: 0 10px;
+    cursor: pointer;
+    transform: rotate(270deg);
+  }
+  .item .front {
+    fill: none;
+    stroke: #3498db;
+    stroke-width: 4;
+    opacity: 0;
+  }
+  .item .back {
+    fill: none;
+    stroke: #3498db;
+    stroke-width: 4;
+    opacity: 0.3;
+  }
+  .image-list {
+    width: 400px;
+    height: 300px;
+    position: relative;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+  }
+  .image-item {
+    display: grid;
+    place-content: center;
+    font-size: 2rem;
+    color: aliceblue;
+    flex: 0 0 400px;
+    width: 400px;
+    height: 300px;
+    background-color: #3498db;
+  }
+  button {
+    background-color: #3498db;
+    color: aliceblue;
+    border: 0;
+    font-size: 1rem;
+    padding: 0.3rem;
+    border-radius: 0.3rem;
+    transition: background-color 0.2s ease;
+    @media (any-hover: hover) {
+      &:hover {
+        background-color: darkblue;
+      }
+    }
+  }
+  .arrow-wrapper {
+    margin-top: 1rem;
+  }
+</style>
+
+<script>
+  import gsap from "gsap";
+  const IMAGE_WIDTH = 400;
+  const items = document.querySelectorAll(".item");
+  let currentIndex = 0;
+  let animationTimeline;
+  let nextAnimationTimeout;
+  const arrowLeft = document.getElementById("arrow-left");
+  const arrowRight = document.getElementById("arrow-right");
+  const images = document.querySelectorAll(".image-item");
+  let imageTimeline;
+  let nextImageAnimationTimeout;
+
+  function drawCircle(circle) {
+    const circumference = 2 * Math.PI * 40; // 2πr
+    gsap.set(circle, {
+      strokeDasharray: circumference,
+      strokeDashoffset: circumference,
+      opacity: 0,
+    });
+
+    return gsap
+      .timeline()
+      .to(circle, {
+        opacity: 1,
+        duration: 0.3,
+        ease: "power2.inOut",
+      })
+      .to(circle, {
+        strokeDashoffset: 0,
+        duration: 1,
+        ease: "power2.inOut",
+      })
+      .to(circle, {
+        opacity: 0,
+        duration: 0.2,
+        ease: "power2.inOut",
+        delay: 0.5,
+      });
+  }
+
+  function animateItem(index) {
+    const circle = items[index].querySelector(".front");
+    animationTimeline = drawCircle(circle);
+    animationTimeline.eventCallback("onComplete", () => {
+      currentIndex = (index + 1) % items.length;
+      nextAnimationTimeout = setTimeout(() => animateItem(currentIndex), 100);
+    });
+  }
+
+  function stopAnimation() {
+    if (animationTimeline) {
+      animationTimeline.kill();
+    }
+    if (nextAnimationTimeout) {
+      clearTimeout(nextAnimationTimeout);
+      nextAnimationTimeout = null;
+    }
+    gsap.killTweensOf(items);
+  }
+
+  function resetCircles() {
+    items.forEach((item) => {
+      const circle = item.querySelector(".front");
+      gsap.set(circle, {
+        strokeDashoffset: 2 * Math.PI * 40,
+        opacity: 0,
+      });
+    });
+  }
+
+  function startAnimation(startIndex) {
+    stopAnimation();
+    resetCircles();
+    currentIndex = startIndex;
+    animateItem(currentIndex);
+  }
+
+  items.forEach((item, index) => {
+    item.addEventListener("click", () => {
+      startAnimation(index);
+    });
+  });
+
+  // Start animation when the page is loaded
+  //   window.addEventListener("load", () => startAnimation(0));
+
+  function imageSlideAnimation() {
+    imageTimeline = gsap.timeline().to(".image-item", {
+      x: `${-1 * IMAGE_WIDTH * currentIndex}px`,
+      onComplete: () => {
+        nextImageAnimationTimeout = setTimeout(slideNext, 1500);
+      },
+    });
+    return imageTimeline;
+  }
+  function slideNext() {
+    currentIndex += 1;
+    if (currentIndex > images.length - 1) {
+      currentIndex = 0;
+    }
+    imageSlideAnimation();
+  }
+  function slidePrev() {
+    currentIndex -= 1;
+    if (currentIndex < 0) {
+      currentIndex = images.length - 1;
+    }
+    imageSlideAnimation();
+  }
+  function stopImageAnimation() {
+    if (imageTimeline) {
+      imageTimeline.kill();
+    }
+    if (nextImageAnimationTimeout) {
+      clearTimeout(nextImageAnimationTimeout);
+      nextImageAnimationTimeout = null;
+    }
+    gsap.killTweensOf(images);
+  }
+
+  arrowLeft.addEventListener("click", () => {
+    stopImageAnimation();
+    slidePrev();
+  });
+
+  arrowRight.addEventListener("click", () => {
+    stopImageAnimation();
+    slideNext();
+  });
+</script>
