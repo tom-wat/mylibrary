@@ -251,6 +251,9 @@
     resetCircles();
     slidePrev();
     currentIndex -= 1;
+    if (currentIndex < 0) {
+      currentIndex = images.length - 1;
+    }
     animateItem(currentIndex);
   });
 
@@ -260,6 +263,9 @@
     resetCircles();
     slideNext();
     currentIndex += 1;
+    if (currentIndex > images.length - 1) {
+      currentIndex = 0;
+    }
     animateItem(currentIndex);
   });
 </script>
